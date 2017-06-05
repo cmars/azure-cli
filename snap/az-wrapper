@@ -1,0 +1,15 @@
+#!/bin/bash
+
+set -eu
+
+export PYTHONPATH=${SNAP}/lib/python3.5/site-packages
+
+# When az shells out to subcommands, it will exec 'python' which is still
+# python 2.7, even on 16.04. This sets up a PATH that will invoke python3.
+if [ ! -e "${SNAP_USER_DATA}/bin/python" ]; then
+	mkdir -p ${SNAP_USER_DATA}/bin
+	ln -s /usr/bin/python3 ${SNAP_USER_DATA}/bin/python
+fi
+export PATH=${SNAP_USER_DATA}/bin:${PATH}
+
+exec ${SNAP}/bin/az "$@"
